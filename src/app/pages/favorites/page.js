@@ -102,7 +102,7 @@ export default function Favorites() {
         </VStack>
       ) : (
         <Text fontSize="md" color="gray.600">
-          You don't have any favorites yet.
+          You don&apos;t have any favorites yet.
         </Text>
       )}
     </Box>

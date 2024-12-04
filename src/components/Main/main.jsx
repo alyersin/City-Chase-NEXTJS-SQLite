@@ -159,7 +159,6 @@ export default function Main() {
                 position="absolute"
                 top="calc(100% + 4px)"
                 left="0"
-                width="100%"
                 bg="white"
                 color="black"
                 zIndex="10"
@@ -169,6 +168,8 @@ export default function Main() {
                 maxHeight="200px"
                 overflowY="auto"
                 padding="0"
+                fontSize={14}
+                textAlign="left"
               >
                 {suggestions.map((suggestion) => (
                   <ListItem

@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import {
   Box,
@@ -14,6 +14,8 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
+  Text,
+  Spinner,
 } from "@chakra-ui/react";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import Link from "next/link";
@@ -22,8 +24,56 @@ import Image from "next/image";
 export default function Header() {
   const { user, logout } = useContext(AuthContext);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [location, setLocation] = useState(null);
+  const [locationError, setLocationError] = useState(null);
+  const [loadingLocation, setLoadingLocation] = useState(false);
 
   const toggleDrawer = () => setIsDrawerOpen(!isDrawerOpen);
+
+  useEffect(() => {
+    const fetchUserLocation = async () => {
+      setLoadingLocation(true);
+
+      if (!navigator.geolocation) {
+        setLocationError("Geolocation is not supported by your browser.");
+        setLoadingLocation(false);
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+
+          try {
+            const response = await fetch(
+              `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}`
+            );
+            const data = await response.json();
+
+            if (data.results && data.results.length > 0) {
+              setLocation(
+                data.results[0].formatted_address || "Unknown location"
+              );
+            } else {
+              setLocationError("Unable to fetch location details.");
+            }
+          } catch (error) {
+            console.error("Error during reverse geocoding:", error.message);
+            setLocationError("Failed to fetch location.");
+          } finally {
+            setLoadingLocation(false);
+          }
+        },
+        (error) => {
+          console.error("Geolocation error:", error.message);
+          setLocationError("Permission denied or unable to retrieve location.");
+          setLoadingLocation(false);
+        }
+      );
+    };
+
+    fetchUserLocation();
+  }, []);
 
   return (
     <Box
@@ -48,6 +98,21 @@ export default function Header() {
           />
         </Box>
       </Link>
+
+      {/* Current Location */}
+      <Box display="flex" alignItems="center" gap="10px" color="gray.600">
+        {loadingLocation ? (
+          <Spinner size="sm" />
+        ) : location ? (
+          <Text fontSize="sm" isTruncated>
+            {location}
+          </Text>
+        ) : (
+          <Text fontSize="sm" color="red.500">
+            {locationError}
+          </Text>
+        )}
+      </Box>
 
       <Box
         display={{ base: "none", md: "flex" }}

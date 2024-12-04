@@ -43,8 +43,8 @@ City-Chase is designed to provide users with a comprehensive platform for discov
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/alyersin/UrbanEdge.git
-   cd UrbanEdge
+   git clone https://github.com/alyersin/City-Chase.git
+   cd City-Chase
    ```
 2. **Install Dependencies**:
    ```bash
@@ -53,11 +53,11 @@ City-Chase is designed to provide users with a comprehensive platform for discov
 3. **Configure Environment Variables**:
 
    - Create a `.env.local` file at the project root.
-   - Add your MongoDB URI and NextAuth secret:
+   - Add your Google API key and JWT secret:
 
    ```plaintext
-   MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/urban-edge?retryWrites=true&w=majority
-   NEXTAUTH_SECRET=your_secret
+   GOOGLE_API_KEY=your_google_api_key
+   JWT_SECRET=your_secret_key
 
    ```
 

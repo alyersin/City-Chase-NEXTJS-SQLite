@@ -8,71 +8,75 @@ import {
   MenuList,
   MenuItem,
   Avatar,
-  IconButton,
-  Drawer,
-  DrawerBody,
-  DrawerOverlay,
-  DrawerContent,
-  DrawerCloseButton,
   Text,
   Spinner,
 } from "@chakra-ui/react";
-import { HamburgerIcon } from "@chakra-ui/icons";
 import Link from "next/link";
 import Image from "next/image";
 
 export default function Header() {
   const { user, logout } = useContext(AuthContext);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [location, setLocation] = useState(null);
   const [locationError, setLocationError] = useState(null);
   const [loadingLocation, setLoadingLocation] = useState(false);
 
-  const toggleDrawer = () => setIsDrawerOpen(!isDrawerOpen);
+  const fetchIPLocation = async () => {
+    try {
+      const response = await fetch(
+        `https://ipapi.co/json/` // Or another IP geolocation service
+      );
+      const data = await response.json();
+      console.log("IP-based Location:", data);
+      setLocation(`${data.city}, ${data.region}`);
+    } catch (error) {
+      console.error("Error fetching IP location:", error.message);
+    }
+  };
 
-  useEffect(() => {
-    const fetchUserLocation = async () => {
-      setLoadingLocation(true);
+  const fetchGPSLocation = async () => {
+    if (!navigator.geolocation) {
+      setLocationError("Geolocation is not supported by your browser.");
+      return;
+    }
 
-      if (!navigator.geolocation) {
-        setLocationError("Geolocation is not supported by your browser.");
-        setLoadingLocation(false);
-        return;
-      }
+    setLoadingLocation(true);
 
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const { latitude, longitude } = position.coords;
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        console.log("GPS Location:", { latitude, longitude });
 
-          try {
-            const response = await fetch(
-              `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}`
+        try {
+          const response = await fetch(
+            `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}`
+          );
+          const data = await response.json();
+
+          if (data.results && data.results.length > 0) {
+            setLocation(
+              data.results[0].formatted_address || "Unknown location"
             );
-            const data = await response.json();
-
-            if (data.results && data.results.length > 0) {
-              setLocation(
-                data.results[0].formatted_address || "Unknown location"
-              );
-            } else {
-              setLocationError("Unable to fetch location details.");
-            }
-          } catch (error) {
-            console.error("Error during reverse geocoding:", error.message);
-            setLocationError("Failed to fetch location.");
-          } finally {
-            setLoadingLocation(false);
+          } else {
+            setLocationError("Unable to fetch location details.");
           }
-        },
-        (error) => {
-          console.error("Geolocation error:", error.message);
-          setLocationError("Permission denied or unable to retrieve location.");
+        } catch (error) {
+          console.error("Error during reverse geocoding:", error.message);
+          setLocationError("Failed to fetch location.");
+        } finally {
           setLoadingLocation(false);
         }
-      );
-    };
+      },
+      (error) => {
+        console.error("Geolocation error:", error.message);
+        setLocationError("Permission denied or unable to retrieve location.");
+        setLoadingLocation(false);
+      }
+    );
+  };
 
-    fetchUserLocation();
+  useEffect(() => {
+    fetchIPLocation();
+    fetchGPSLocation();
   }, []);
 
   return (
@@ -88,9 +92,9 @@ export default function Header() {
     >
       {/* Logo */}
       <Link href="/">
-        <Box display="flex" alignItems="center" mx="auto">
+        <Box display="flex" alignItems="center">
           <Image
-            src="/assets/logo.png"
+            src="/assets/logo-1.png"
             alt="city-chase logo"
             width={150}
             height={150}
@@ -100,7 +104,7 @@ export default function Header() {
       </Link>
 
       {/* Current Location */}
-      <Box display="flex" alignItems="center" gap="10px" color="gray.600">
+      <Box display="flex" flexDirection="column" alignItems="center">
         {loadingLocation ? (
           <Spinner size="sm" />
         ) : location ? (
@@ -109,17 +113,14 @@ export default function Header() {
           </Text>
         ) : (
           <Text fontSize="sm" color="red.500">
-            {locationError}
+            {locationError || "Unable to fetch location."}
           </Text>
         )}
       </Box>
 
-      <Box
-        display={{ base: "none", md: "flex" }}
-        alignItems="center"
-        gap="20px"
-      >
-        {user && (
+      {/* User Options */}
+      <Box display="flex" alignItems="center" gap="20px">
+        {user ? (
           <>
             <Link href="/pages/city">
               <Button colorScheme="blue" variant="ghost" fontSize="lg">
@@ -131,23 +132,21 @@ export default function Header() {
                 Favorites
               </Button>
             </Link>
+            <Menu>
+              <MenuButton>
+                <Avatar size="sm" name={user.email} />
+              </MenuButton>
+              <MenuList>
+                <MenuItem onClick={() => alert("Profile clicked!")}>
+                  Profile
+                </MenuItem>
+                <MenuItem onClick={() => alert("Dashboard clicked!")}>
+                  Dashboard
+                </MenuItem>
+                <MenuItem onClick={logout}>Logout</MenuItem>
+              </MenuList>
+            </Menu>
           </>
-        )}
-        {user ? (
-          <Menu>
-            <MenuButton>
-              <Avatar size="sm" name={user.email} />
-            </MenuButton>
-            <MenuList>
-              <MenuItem onClick={() => alert("Profile clicked!")}>
-                Profile
-              </MenuItem>
-              <MenuItem onClick={() => alert("Dashboard clicked!")}>
-                Dashboard
-              </MenuItem>
-              <MenuItem onClick={logout}>Logout</MenuItem>
-            </MenuList>
-          </Menu>
         ) : (
           <Link href="/pages/login">
             <Button
@@ -160,73 +159,6 @@ export default function Header() {
             </Button>
           </Link>
         )}
-      </Box>
-
-      {/* Hamburger menu */}
-      <Box display={{ base: "block", md: "none" }}>
-        <IconButton
-          icon={<HamburgerIcon />}
-          variant="outline"
-          onClick={toggleDrawer}
-        />
-        <Drawer isOpen={isDrawerOpen} placement="right" onClose={toggleDrawer}>
-          <DrawerOverlay />
-          <DrawerContent>
-            <DrawerCloseButton />
-            <DrawerBody>
-              {user && (
-                <>
-                  <Link href="/pages/city" onClick={toggleDrawer}>
-                    <Button
-                      colorScheme="blue"
-                      variant="ghost"
-                      fontSize="lg"
-                      width="100%"
-                      mb="2"
-                    >
-                      City
-                    </Button>
-                  </Link>
-                  <Link href="/pages/favorites" onClick={toggleDrawer}>
-                    <Button
-                      colorScheme="blue"
-                      variant="ghost"
-                      fontSize="lg"
-                      width="100%"
-                      mb="2"
-                    >
-                      Favorites
-                    </Button>
-                  </Link>
-                </>
-              )}
-              {user ? (
-                <Button
-                  colorScheme="pink"
-                  variant="solid"
-                  width="100%"
-                  mt="4"
-                  onClick={logout}
-                >
-                  Logout
-                </Button>
-              ) : (
-                <Link href="/pages/login" onClick={toggleDrawer}>
-                  <Button
-                    colorScheme="pink"
-                    borderRadius="50px"
-                    padding="0 28px"
-                    fontSize="lg"
-                    width="100%"
-                    mt="4"
-                  >
-                    Login
-                  </Button>
-                </Link>
-              )}
-            </DrawerBody>
-          </DrawerContent>
-        </Drawer>
       </Box>
     </Box>
   );

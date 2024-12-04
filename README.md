@@ -1,4 +1,4 @@
-# UrbanEdge - [https://urban-edge-rho.vercel.app/](https://urban-edge-rho.vercel.app/)
+# City-Chase - [https://city-chase-rho.vercel.app/]
 
 <img src="./xxxxxxx" alt="Screenshot of City-Chase" width="500"/>
 
@@ -23,11 +23,15 @@ City-Chase is designed to provide users with a comprehensive platform for discov
 
 ## Features
 
-- **Browse Products**: Explore a wide range of products across multiple categories.
-- **Add to Favorites**: Save products to a favorites list for quick access.
-- **Customization**: Adjust product preferences and categories for a personalized experience.
-- **Authentication**: User registration and login are supported via NextAuth and MongoDB for a secure experience.
-- **Responsive Design**: Optimized for mobile and desktop, ensuring a seamless user experience on any device.
+- **Search Cities**: Use the Google Places Autocomplete API to search for cities worldwide.
+- **View City Details**: Access detailed city information, including:
+- - Name, Country
+- - Latitude, Longitude
+- - Population, Time Zone
+- **Interactive Map**: View city locations interactively using Google Maps.
+- **Add to Favorites**: Save cities to your favorites for quick access.
+- **Authentication**: User registration and login functionality to ensure a personalized experience.
+- **Responsive Design**: Optimized for both mobile and desktop, providing a seamless experience across all devices.
 
 ## Installation
 

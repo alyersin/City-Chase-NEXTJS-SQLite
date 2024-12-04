@@ -1,4 +1,4 @@
-# City-Chase - [https://city-chase-rho.vercel.app/]
+# City-Chase - [https://city-chase.vercel.app/](https://city-chase.vercel.app/)
 
 <img src="city-chase-ss.jpg" alt="Screenshot of City-Chase" width="500"/>
 

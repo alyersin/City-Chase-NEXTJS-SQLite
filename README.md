@@ -1,4 +1,4 @@
-# UrbanEdge - [https://urban-edge-rho.vercel.app/](https://urban-edge-rho.vercel.app/)
+# City-Chase - [https://city-chase-rho.vercel.app/]
 
 <img src="./xxxxxxx" alt="Screenshot of City-Chase" width="500"/>
 

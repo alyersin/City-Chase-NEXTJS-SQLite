@@ -76,10 +76,11 @@ City-Chase is designed to provide users with a comprehensive platform for discov
 ## Technologies Used
 
 - **Next.js**: For the React framework and server-side rendering.
-- **MongoDB (via Mongoose)**: For data storage and retrieval.
+- **SQLite (via TypeORM)**: For data storage and retrieval of user and favorite data.
 - **Chakra UI**: For styled, responsive UI components.
-- **NextAuth**: For handling authentication with email and password.
-- **Adobe Illustrator**: Used for creating custom visuals and graphics used throughout the app.
+- **Google Places API**: For autocomplete city search.
+- **Google Maps API**: For interactive map integration.
+- **JSON Web Tokens (JWT)**: For handling authentication and authorization.
 
 ## Future Development
 

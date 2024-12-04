@@ -18,7 +18,7 @@ export default function CityDetails({ cityDetails }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Include the token
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ cityDetails }),
       });
@@ -28,11 +28,15 @@ export default function CityDetails({ cityDetails }) {
       if (!response.ok) {
         const error = await response.json();
         console.error("Failed to add favorite:", error);
-        alert(error.error || "Failed to add favorite");
+        alert(error.error || "Failed to add favorite.");
         return;
       }
 
+      const data = await response.json();
+      console.log("Favorite added successfully:", data);
       alert("Added to favorites!");
+
+      setIsFavorite(true);
     } catch (error) {
       console.error("Error adding to favorites:", error.message);
       alert("An error occurred while adding to favorites.");

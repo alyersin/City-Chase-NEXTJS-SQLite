@@ -24,6 +24,8 @@ export default function Login() {
     const email = e.target.email.value;
     const password = e.target.password.value;
 
+    console.log("Login input:", { email, password });
+
     try {
       const response = await fetch("/api/login", {
         method: "POST",
@@ -33,19 +35,21 @@ export default function Login() {
         body: JSON.stringify({ email, password }),
       });
 
+      console.log("Response status:", response.status);
+
       const data = await response.json();
+      console.log("Response data:", data);
 
       if (response.ok) {
         localStorage.setItem("token", data.token);
-
         alert("Login successful!");
+
         router.push("/");
       } else {
         alert(data.error || "Login failed!");
       }
     } catch (error) {
       console.error("Error during login:", error.message);
-      alert("An error occurred. Please try again.");
     }
   };
 

@@ -1,10 +1,10 @@
 const { DataSource } = require("typeorm");
-const User = require("./entities/User"); // Adjust this to match your structure
-const Favorite = require("./entities/Favorite");
+const User = require("../src/entities/User");
+const Favorite = require("../src/entities/Favorite");
 
 const AppDataSource = new DataSource({
   type: "sqlite",
-  database: "./database.sqlite",
+  database: "./database/cityChase.db",
   entities: [User, Favorite],
   synchronize: true,
 });

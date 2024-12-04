@@ -7,6 +7,7 @@ import {
   Input,
   Button,
   Text,
+  Flex,
   List,
   ListItem,
 } from "@chakra-ui/react";
@@ -112,58 +113,72 @@ export default function Main() {
         <Heading size="xl" marginBottom="16px">
           what&apos;s your destination?
         </Heading>
-        <Box position="relative">
-          <Input
-            placeholder="City, Region or Country"
-            value={keyword}
-            onChange={handleChange}
-            width={{ base: "100%", md: "300px" }}
-            bg="white"
-            color="black"
-            _placeholder={{ color: "gray.500" }}
-          />
-          {suggestions.length > 0 && (
-            <List
-              position="absolute"
-              top="100%"
-              left="0"
-              width={{ base: "100%", md: "300px" }}
+        <Flex
+          position="relative"
+          justifyContent="center"
+          alignItems="center"
+          gap="4px"
+          mt="4"
+          flexWrap="wrap"
+        >
+          <Box
+            position="relative"
+            flex="1"
+            maxWidth={{ base: "100%", md: "300px" }}
+          >
+            <Input
+              placeholder="City, Region or Country"
+              value={keyword}
+              onChange={handleChange}
+              width="100%"
               bg="white"
               color="black"
-              zIndex="10"
-              border="1px solid #ccc"
-              borderRadius="md"
-              boxShadow="md"
-              maxHeight="200px"
-              overflowY="auto"
-              mt="2"
-              padding="0"
-              boxSizing="border-box"
-            >
-              {suggestions.map((suggestion) => (
-                <ListItem
-                  key={suggestion.place_id}
-                  padding="8px"
-                  borderBottom="1px solid #eee"
-                  cursor="pointer"
-                  _hover={{ bg: "gray.100" }}
-                  onClick={() => handleSelectSuggestion(suggestion)}
-                >
-                  {suggestion.description}
-                </ListItem>
-              ))}
-            </List>
-          )}
-        </Box>
-        <Button
-          colorScheme="blue"
-          width={{ base: "100%", md: "auto" }}
-          mt="8"
-          onClick={() => console.log("Search triggered with:", keyword)}
-          isLoading={loading}
-        >
-          Search
-        </Button>
+              _placeholder={{ color: "gray.500" }}
+              id="autocomplete-input"
+              height="48px" // Explicit height for input
+            />
+            {suggestions.length > 0 && (
+              <List
+                position="absolute"
+                top="calc(100% + 4px)" // Aligns just below the input with a small gap
+                left="0"
+                width="100%" // Ensures the dropdown matches the input width
+                bg="white"
+                color="black"
+                zIndex="10"
+                border="1px solid #ccc"
+                borderRadius="md"
+                boxShadow="md"
+                maxHeight="200px"
+                overflowY="auto"
+                padding="0"
+              >
+                {suggestions.map((suggestion) => (
+                  <ListItem
+                    key={suggestion.place_id}
+                    padding="8px"
+                    borderBottom="1px solid #eee"
+                    cursor="pointer"
+                    _hover={{ bg: "gray.100" }}
+                    onClick={() => handleSelectSuggestion(suggestion)}
+                  >
+                    {suggestion.description}
+                  </ListItem>
+                ))}
+              </List>
+            )}
+          </Box>
+          <Button
+            colorScheme="blue"
+            onClick={() => console.log("Search triggered with:", keyword)}
+            isLoading={loading}
+            height="48px" // Matches the input height
+            padding="0 24px"
+            fontSize="17px"
+          >
+            SEARCH
+          </Button>
+        </Flex>
         {error && (
           <Text color="red.400" mt="4">
             {error}

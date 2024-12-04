@@ -10,7 +10,6 @@ export default function Favorites() {
   const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
-    // Fetch the user's favorites from the API or database
     const fetchFavorites = async () => {
       try {
         const response = await fetch("/api/favorites", {
@@ -21,11 +20,14 @@ export default function Favorites() {
           },
         });
 
+        console.log("Response status:", response.status);
+
         if (response.ok) {
           const data = await response.json();
+          console.log("Fetched favorites:", data);
           setFavorites(data.favorites || []);
         } else {
-          console.error("Failed to fetch favorites.");
+          console.error("Failed to fetch favorites:", response.statusText);
         }
       } catch (error) {
         console.error("Error fetching favorites:", error.message);

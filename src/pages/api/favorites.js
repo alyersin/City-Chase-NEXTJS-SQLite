@@ -3,7 +3,7 @@ import { AppDataSource } from "../../../database/database";
 const Favorite = require("../../entities/Favorite");
 const User = require("../../entities/User");
 
-const JWT_SECRET = "your-secret-key";
+const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
 
 export default async function handler(req, res) {
   const authHeader = req.headers.authorization;
@@ -17,8 +17,11 @@ export default async function handler(req, res) {
   let userId;
 
   try {
+    console.log("Authorization Header:", authHeader);
+    console.log("Token received:", token);
+
     const decoded = jwt.verify(token, JWT_SECRET);
-    console.log("Token verified:", decoded);
+    console.log("Token verified. Decoded user:", decoded);
     userId = decoded.id;
   } catch (error) {
     console.error("Token verification failed:", error.message);
@@ -26,7 +29,9 @@ export default async function handler(req, res) {
   }
 
   try {
-    await AppDataSource.initialize();
+    if (!AppDataSource.isInitialized) {
+      await AppDataSource.initialize();
+    }
 
     const favoriteRepository = AppDataSource.getRepository(Favorite);
     const userRepository = AppDataSource.getRepository(User);
@@ -85,6 +90,8 @@ export default async function handler(req, res) {
     console.error("Database error:", error.message);
     return res.status(500).json({ error: "Internal server error." });
   } finally {
-    await AppDataSource.destroy();
+    if (AppDataSource.isInitialized) {
+      await AppDataSource.destroy();
+    }
   }
 }

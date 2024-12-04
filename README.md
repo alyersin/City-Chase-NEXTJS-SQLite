@@ -68,10 +68,10 @@ City-Chase is designed to provide users with a comprehensive platform for discov
 
 ## Usage
 
-1. Start the application with `npm run dev`.
-2. Go to `http://localhost:3000` to access the app locally.
-3. Browse products, add them to favorites, and customize your shopping preferences.
-4. Register or log in to save preferences and access your favorite items.
+1. Start the application with npm run dev.
+2. Go to http://localhost:3000 to access the app locally.
+3. Search for cities, view their details, and save them to your favorites.
+4. Register or log in to save your favorites and view them across sessions.
 
 ## Technologies Used
 
@@ -84,10 +84,10 @@ City-Chase is designed to provide users with a comprehensive platform for discov
 
 ## Future Development
 
-Some potential future features include:
+Potential future features include:
 
-- **Enhanced Authentication**: Add OAuth providers (e.g., Google, Facebook) for easier login.
-- **Detailed Analytics**: Track user preferences and popular products based on user interactions.
-- **Product Recommendations**: Suggest similar or popular products based on user favorites.
-- **Social Sharing**: Allow users to share their favorite products with friends.
-- **In-App Messaging**: Enable real-time chat or messaging for users exploring similar products.
+- Enhanced Search: Add filters to refine city searches (e.g., population, country).
+- City Recommendations: Suggest similar or trending cities based on user preferences.
+- Social Sharing: Allow users to share their favorite cities with others.
+- Multi-Language Support: Make the app accessible to users from different regions.
+- Offline Mode: Allow users to access saved favorites without an internet connection.

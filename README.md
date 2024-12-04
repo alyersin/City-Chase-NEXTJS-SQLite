@@ -25,7 +25,6 @@ City-Chase is designed to provide users with a comprehensive platform for discov
 
 - **Search Cities**: Use the Google Places Autocomplete API to search for cities worldwide.
 - **View City Details**: Access detailed city information, including:
-<<<<<<< HEAD
 - - Name, Country
 - - Latitude, Longitude
 - - Population, Time Zone

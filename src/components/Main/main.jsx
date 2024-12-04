@@ -1,15 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   Box,
   Heading,
   Input,
   Button,
   Text,
-  Flex,
   List,
   ListItem,
+  Flex,
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 
@@ -20,12 +20,21 @@ export default function Main() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const debounceTimeout = useRef(null);
+  const cache = useRef({});
+
   const fetchAutocompleteSuggestions = async (query) => {
     console.log("Fetching autocomplete suggestions for:", query);
 
     if (!query) {
       console.log("Query is empty. Clearing suggestions.");
       setSuggestions([]);
+      return;
+    }
+
+    if (cache.current[query]) {
+      console.log("Serving suggestions from cache:", cache.current[query]);
+      setSuggestions(cache.current[query]);
       return;
     }
 
@@ -45,6 +54,7 @@ export default function Main() {
 
       const data = await response.json();
       console.log("Autocomplete suggestions received:", data.predictions);
+      cache.current[query] = data.predictions || [];
       setSuggestions(data.predictions || []);
     } catch (err) {
       console.error("Error fetching autocomplete suggestions:", err.message);
@@ -58,7 +68,14 @@ export default function Main() {
     const query = e.target.value;
     console.log("User is typing:", query);
     setKeyword(query);
-    fetchAutocompleteSuggestions(query);
+
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current);
+    }
+
+    debounceTimeout.current = setTimeout(() => {
+      fetchAutocompleteSuggestions(query);
+    }, 300);
   };
 
   const handleSelectSuggestion = async (suggestion) => {
@@ -102,29 +119,29 @@ export default function Main() {
       display="flex"
       justifyContent="center"
       alignItems="center"
+      padding="16px"
     >
       <Box
         maxWidth="1280px"
         width="100%"
-        padding="16px"
         textAlign="center"
         color="white"
+        padding="16px"
       >
-        <Heading size="xl" marginBottom="16px">
+        <Heading size={{ base: "lg", md: "xl" }} marginBottom="16px">
           what&apos;s your destination?
         </Heading>
         <Flex
-          position="relative"
+          direction={{ base: "column", md: "row" }}
           justifyContent="center"
           alignItems="center"
           gap="4px"
-          mt="4"
-          flexWrap="wrap"
         >
           <Box
             position="relative"
             flex="1"
             maxWidth={{ base: "100%", md: "300px" }}
+            width="100%"
           >
             <Input
               placeholder="City, Region or Country"
@@ -135,14 +152,14 @@ export default function Main() {
               color="black"
               _placeholder={{ color: "gray.500" }}
               id="autocomplete-input"
-              height="48px" // Explicit height for input
+              height="48px"
             />
             {suggestions.length > 0 && (
               <List
                 position="absolute"
-                top="calc(100% + 4px)" // Aligns just below the input with a small gap
+                top="calc(100% + 4px)"
                 left="0"
-                width="100%" // Ensures the dropdown matches the input width
+                width="100%"
                 bg="white"
                 color="black"
                 zIndex="10"
@@ -168,19 +185,21 @@ export default function Main() {
               </List>
             )}
           </Box>
-          <Button
-            colorScheme="blue"
-            onClick={() => console.log("Search triggered with:", keyword)}
-            isLoading={loading}
-            height="48px" // Matches the input height
-            padding="0 24px"
-            fontSize="17px"
-          >
-            SEARCH
-          </Button>
+          <Box mt={{ base: "4", md: "0" }} width={{ base: "100%", md: "auto" }}>
+            <Button
+              colorScheme="blue"
+              onClick={() => console.log("Search triggered with:", keyword)}
+              isLoading={loading}
+              height="48px"
+              padding="0 24px"
+              width="100%"
+            >
+              Search
+            </Button>
+          </Box>
         </Flex>
         {error && (
-          <Text color="red.400" mt="4">
+          <Text color="red.400" mt="4" fontSize={{ base: "sm", md: "md" }}>
             {error}
           </Text>
         )}

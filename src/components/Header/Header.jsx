@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import {
   Box,
@@ -8,14 +8,22 @@ import {
   MenuList,
   MenuItem,
   Avatar,
+  IconButton,
+  Drawer,
+  DrawerBody,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
 } from "@chakra-ui/react";
+import { HamburgerIcon } from "@chakra-ui/icons";
 import Link from "next/link";
 import Image from "next/image";
 
 export default function Header() {
   const { user, logout } = useContext(AuthContext);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  // console.log("User in Header:", user);
+  const toggleDrawer = () => setIsDrawerOpen(!isDrawerOpen);
 
   return (
     <Box
@@ -24,29 +32,30 @@ export default function Header() {
       maxWidth="1280px"
       mx="auto"
       height={20}
-      border="1px solid black"
-      // bg="gray.200"
       alignItems="center"
       justifyContent="space-between"
-      padding="0 20px"
+      padding={{ base: "0 20px", md: "0 80px" }}
     >
-      {/* Logo  */}
+      {/* Logo */}
       <Link href="/">
-        <Box display="flex" alignItems="center">
+        <Box display="flex" alignItems="center" mx="auto">
           <Image
             src="/assets/logo.png"
             alt="city-chase logo"
-            width={200}
-            height={200}
+            width={150}
+            height={150}
+            draggable={false}
           />
         </Box>
       </Link>
 
-      {/* Navigation  */}
-      <Box display="flex" alignItems="center" gap="20px">
+      <Box
+        display={{ base: "none", md: "flex" }}
+        alignItems="center"
+        gap="20px"
+      >
         {user && (
-          <Box>
-            {" "}
+          <>
             <Link href="/pages/city">
               <Button colorScheme="blue" variant="ghost" fontSize="lg">
                 City
@@ -57,9 +66,8 @@ export default function Header() {
                 Favorites
               </Button>
             </Link>
-          </Box>
+          </>
         )}
-
         {user ? (
           <Menu>
             <MenuButton>
@@ -87,6 +95,73 @@ export default function Header() {
             </Button>
           </Link>
         )}
+      </Box>
+
+      {/* Hamburger menu */}
+      <Box display={{ base: "block", md: "none" }}>
+        <IconButton
+          icon={<HamburgerIcon />}
+          variant="outline"
+          onClick={toggleDrawer}
+        />
+        <Drawer isOpen={isDrawerOpen} placement="right" onClose={toggleDrawer}>
+          <DrawerOverlay />
+          <DrawerContent>
+            <DrawerCloseButton />
+            <DrawerBody>
+              {user && (
+                <>
+                  <Link href="/pages/city" onClick={toggleDrawer}>
+                    <Button
+                      colorScheme="blue"
+                      variant="ghost"
+                      fontSize="lg"
+                      width="100%"
+                      mb="2"
+                    >
+                      City
+                    </Button>
+                  </Link>
+                  <Link href="/pages/favorites" onClick={toggleDrawer}>
+                    <Button
+                      colorScheme="blue"
+                      variant="ghost"
+                      fontSize="lg"
+                      width="100%"
+                      mb="2"
+                    >
+                      Favorites
+                    </Button>
+                  </Link>
+                </>
+              )}
+              {user ? (
+                <Button
+                  colorScheme="pink"
+                  variant="solid"
+                  width="100%"
+                  mt="4"
+                  onClick={logout}
+                >
+                  Logout
+                </Button>
+              ) : (
+                <Link href="/pages/login" onClick={toggleDrawer}>
+                  <Button
+                    colorScheme="pink"
+                    borderRadius="50px"
+                    padding="0 28px"
+                    fontSize="lg"
+                    width="100%"
+                    mt="4"
+                  >
+                    Login
+                  </Button>
+                </Link>
+              )}
+            </DrawerBody>
+          </DrawerContent>
+        </Drawer>
       </Box>
     </Box>
   );

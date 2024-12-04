@@ -1,6 +1,6 @@
 # City-Chase - [https://city-chase-rho.vercel.app/]
 
-<img src="./xxxxxxx" alt="Screenshot of City-Chase" width="500"/>
+<img src="city-chase-ss.png" alt="Screenshot of City-Chase" width="500"/>
 
 City-Chase is a web application developed with Next.js and integrated with SQLite (via TypeORM). It enables users to explore city details, save favorite cities, and enjoy a personalized experience. With seamless navigation, a visually appealing interface, and robust features like authentication and geolocation, City-Chase aims to provide an engaging way to explore destinations around the world.
 

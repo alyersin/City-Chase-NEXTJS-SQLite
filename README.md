@@ -17,9 +17,9 @@ City-Chase is a web application developed with Next.js and integrated with SQLit
 
 City-Chase is designed to provide users with a comprehensive platform for discovering city details, managing favorites, and accessing city-specific information interactively.
 
-- Dynamic City Data: City details are dynamically fetched through API routes, powered by Google Places and Google Maps APIs.
-- Personalized Experience: Authenticated users can save cities to their favorites for quick access.
-- Favorites Management: Manage and revisit your favorite cities in a dedicated favorites section.
+- **Dynamic City Data**: City details are dynamically fetched through API routes, powered by Google Places and Google Maps APIs.
+- **Personalized Experience**: Authenticated users can save cities to their favorites for quick access.
+- **Favorites Management**: Manage and revisit your favorite cities in a dedicated favorites section.
 
 ## Features
 

@@ -29,7 +29,6 @@ City-Chase is designed to provide users with a comprehensive platform for discov
 - - Name, Country
 - - Latitude, Longitude
 - - Population, Time Zone
-=======
 -  -  Name, Country
 -  -  Latitude, Longitude
 -  -  Population, Time Zone

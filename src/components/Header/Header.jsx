@@ -22,9 +22,7 @@ export default function Header() {
 
   const fetchIPLocation = async () => {
     try {
-      const response = await fetch(
-        `https://ipapi.co/json/` // Or another IP geolocation service
-      );
+      const response = await fetch(`https://ipapi.co/json/`);
       const data = await response.json();
       console.log("IP-based Location:", data);
       setLocation(`${data.city}, ${data.region}`);
